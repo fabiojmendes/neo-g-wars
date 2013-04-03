@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
@@ -6,3 +7,7 @@
 *.csproj
 *.unityproj
 *.sln
+=======
+Library
+Temp
+>>>>>>> Commit inicial
