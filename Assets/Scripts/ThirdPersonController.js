@@ -2,18 +2,11 @@
 // Require a character controller to be attached to the same game object
 @script RequireComponent(CharacterController)
 
-public var idleAnimation : AnimationClip;
-public var walkAnimation : AnimationClip;
-public var runAnimation : AnimationClip;
-public var jumpPoseAnimation : AnimationClip;
-
 public var walkMaxAnimationSpeed : float = 0.75;
 public var trotMaxAnimationSpeed : float = 1.0;
 public var runMaxAnimationSpeed : float = 1.0;
 public var jumpAnimationSpeed : float = 1.15;
 public var landAnimationSpeed : float = 1.0;
-
-private var _animation : Animation;
 
 enum CharacterState {
 	Idle = 0,
@@ -90,37 +83,20 @@ private var lastGroundedTime = 0.0;
 
 private var isControllable = true;
 
+private var animator : Animator;
+
+private var idleState : int = Animator.StringToHash("Base Layer.Idle");       
+private var locoState : int = Animator.StringToHash("Base Layer.Locomotion");                  // these integers are references to our animator's states
+
+
 function Awake ()
 {
 	moveDirection = transform.TransformDirection(Vector3.forward);
 	
-	_animation = GetComponent(Animation);
-	if(!_animation)
+	animator = GetComponent(Animator);
+	if(!animator)
 		Debug.Log("The character you would like to control doesn't have animations. Moving her might look weird.");
 	
-	/*
-public var idleAnimation : AnimationClip;
-public var walkAnimation : AnimationClip;
-public var runAnimation : AnimationClip;
-public var jumpPoseAnimation : AnimationClip;	
-	*/
-	if(!idleAnimation) {
-		_animation = null;
-		Debug.Log("No idle animation found. Turning off animations.");
-	}
-	if(!walkAnimation) {
-		_animation = null;
-		Debug.Log("No walk animation found. Turning off animations.");
-	}
-	if(!runAnimation) {
-		_animation = null;
-		Debug.Log("No run animation found. Turning off animations.");
-	}
-	if(!jumpPoseAnimation && canJump) {
-		_animation = null;
-		Debug.Log("No jump animation found and the character has canJump enabled. Turning off animations.");
-	}
-			
 }
 
 
@@ -318,41 +294,21 @@ function Update() {
 	collisionFlags = controller.Move(movement);
 	
 	// ANIMATION sector
-	if(_animation) {
-		if(_characterState == CharacterState.Jumping) 
-		{
-			if(!jumpingReachedApex) {
-				_animation[jumpPoseAnimation.name].speed = jumpAnimationSpeed;
-				_animation[jumpPoseAnimation.name].wrapMode = WrapMode.ClampForever;
-				_animation.CrossFade(jumpPoseAnimation.name);
-			} else {
-				_animation[jumpPoseAnimation.name].speed = -landAnimationSpeed;
-				_animation[jumpPoseAnimation.name].wrapMode = WrapMode.ClampForever;
-				_animation.CrossFade(jumpPoseAnimation.name);				
-			}
-		} 
-		else 
-		{
-			if(controller.velocity.sqrMagnitude < 0.1) {
-				_animation.CrossFade(idleAnimation.name);
-			}
-			else 
-			{
-				if(_characterState == CharacterState.Running) {
-					_animation[runAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, runMaxAnimationSpeed);
-					_animation.CrossFade(runAnimation.name);	
-				}
-				else if(_characterState == CharacterState.Trotting) {
-					_animation[walkAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, trotMaxAnimationSpeed);
-					_animation.CrossFade(walkAnimation.name);	
-				}
-				else if(_characterState == CharacterState.Walking) {
-					_animation[walkAnimation.name].speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, walkMaxAnimationSpeed);
-					_animation.CrossFade(walkAnimation.name);	
-				}
-				
-			}
+	
+	currentBaseState = animator.GetCurrentAnimatorStateInfo(0);
+	if(controller.velocity.sqrMagnitude < 0.1) {
+		//IDLE
+		animator.SetFloat('Speed', 0.0);
+	} else {
+		var speed;
+		if(_characterState == CharacterState.Running) {
+			speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, runMaxAnimationSpeed);
+		} else if(_characterState == CharacterState.Trotting) {
+			speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, trotMaxAnimationSpeed);
+		} else if(_characterState == CharacterState.Walking) {
+			speed = Mathf.Clamp(controller.velocity.magnitude, 0.0, walkMaxAnimationSpeed);
 		}
+		animator.SetFloat('Speed', speed);
 	}
 	// ANIMATION sector
 	
