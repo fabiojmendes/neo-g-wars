@@ -4,10 +4,35 @@ ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
     100000: //RootNode
+    100002: base
+    100004: torre1
+    100006: torre2
+    100008: torre3
+    100010: torre4
     400000: //RootNode
+    400002: base
+    400004: torre1
+    400006: torre2
+    400008: torre3
+    400010: torre4
     2300000: //RootNode
+    2300002: base
+    2300004: torre1
+    2300006: torre2
+    2300008: torre3
+    2300010: torre4
     3300000: //RootNode
+    3300002: base
+    3300004: torre1
+    3300006: torre2
+    3300008: torre3
+    3300010: torre4
     4300000: base
+    4300002: torre1
+    4300004: torre2
+    4300006: torre3
+    4300008: torre4
+    7400000: Take 001
     9500000: //RootNode
   materials:
     importMaterials: 1
