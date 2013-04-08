@@ -89,8 +89,7 @@ private var idleState : int = Animator.StringToHash("Base Layer.Idle");
 private var locoState : int = Animator.StringToHash("Base Layer.Locomotion");                  // these integers are references to our animator's states
 
 
-function Awake ()
-{
+function Awake() {
 	moveDirection = transform.TransformDirection(Vector3.forward);
 	
 	animator = GetComponent(Animator);
@@ -99,9 +98,7 @@ function Awake ()
 	
 }
 
-
-function UpdateSmoothedMovementDirection ()
-{
+function UpdateSmoothedMovementDirection() {
 	var cameraTransform = Camera.main.transform;
 	var grounded = IsGrounded();
 	
@@ -342,55 +339,48 @@ function Update() {
 	}
 }
 
-function OnControllerColliderHit (hit : ControllerColliderHit )
-{
+function OnControllerColliderHit(hit : ControllerColliderHit ) {
 //	Debug.DrawRay(hit.point, hit.normal);
 	if (hit.moveDirection.y > 0.01) 
 		return;
 }
 
-function GetSpeed () {
+function GetSpeed() {
 	return moveSpeed;
 }
 
-function IsJumping () {
+function IsJumping() {
 	return jumping;
 }
 
-function IsGrounded () {
+function IsGrounded() {
 	return (collisionFlags & CollisionFlags.CollidedBelow) != 0;
 }
 
-function GetDirection () {
+function GetDirection() {
 	return moveDirection;
 }
 
-function IsMovingBackwards () {
+function IsMovingBackwards() {
 	return movingBack;
 }
 
-function GetLockCameraTimer () 
-{
+function GetLockCameraTimer() {
 	return lockCameraTimer;
 }
 
-function IsMoving ()  : boolean
-{
+function IsMoving() : boolean {
 	return Mathf.Abs(Input.GetAxisRaw("Vertical")) + Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0.5;
 }
 
-function HasJumpReachedApex ()
-{
+function HasJumpReachedApex () {
 	return jumpingReachedApex;
 }
 
-function IsGroundedWithTimeout ()
-{
+function IsGroundedWithTimeout() {
 	return lastGroundedTime + groundedTimeout > Time.time;
 }
 
-function Reset ()
-{
+function Reset() {
 	gameObject.tag = "Player";
 }
-
