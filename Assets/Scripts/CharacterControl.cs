@@ -1,70 +1,46 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof (Animator))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(CharacterController))]
 public class CharacterControl : MonoBehaviour {
+
+	public float animationSpeed = 1.5f;
 	
+	private CharacterController controller;
+	private Animator animator;
 	
-	public float animSpeed = 1.5f;
-	
-	
-	private Animator anim;
-	
-	private AnimatorStateInfo currentBaseState;
-	
-	
-	static int idleState = Animator.StringToHash("Base Layer.Idle");	
-	static int locoState = Animator.StringToHash("Base Layer.Locomotion");
-	static int atackState = Animator.StringToHash("Base Layer.atack1");
+	static int atttackState = Animator.StringToHash("Base Layer.atack1");
 	
 	// Use this for initialization
-	void Start () {
-	
-		anim = GetComponent<Animator>();
+	void Start() {
+		animator = GetComponent<Animator>();
+		controller = GetComponent<CharacterController>();
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update() {
 		float v = Input.GetAxisRaw("Vertical");
 		float h = Input.GetAxisRaw("Horizontal");
 		
-		anim.SetFloat("Speed", v);
-		anim.SetFloat("Direction", h);
-		anim.speed = animSpeed;
-		
 		Vector3 direction = new Vector3(-h, 0, -v);
-		direction.Normalize();
-		direction *= Time.deltaTime * animSpeed;
-		
-		currentBaseState = anim.GetCurrentAnimatorStateInfo(0);
+		//direction.Normalize();
 		
 		// Move the controller
-		CharacterController controller = GetComponent<CharacterController>();
-		controller.Move(direction);
+		//controller.Move(direction * Time.deltaTime * animationSpeed);
 		
+		//Vector3 result = transform - direction;
+		animator.SetFloat("Speed", v);
+		animator.SetFloat("Direction", h);
+		animator.speed = animationSpeed;
+		
+
 		// ATACK
-		
-		if (currentBaseState.nameHash == locoState)
-		{
-			if(Input.GetButton("Fire1"))
-			{
-				anim.SetBool("Atack", true);
-			}
-		}
-		
-		
-		// IDLE
-		
-		else if (currentBaseState.nameHash == idleState)
-		{
-			if(Input.GetButton("Fire1"))
-			{
-				anim.SetBool("Atack", true);
-			}
-		}
-		else if(currentBaseState.nameHash == atackState)
-		{
-			anim.SetBool("Atack", false);
+		AnimatorStateInfo currentBaseState = animator.GetCurrentAnimatorStateInfo(0);
+		if (currentBaseState.nameHash == atttackState) {
+			animator.SetBool("Atack", false);
+		} else {
+			animator.SetBool("Atack", Input.GetButton("Fire1"));
 		}
 	}
 }
