@@ -87,7 +87,7 @@ private var animator : Animator;
 
 private var idleState : int = Animator.StringToHash("Base Layer.Idle");       
 private var locoState : int = Animator.StringToHash("Base Layer.Locomotion");                  // these integers are references to our animator's states
-
+private var atacState : int = Animator.StringToHash("Base Layer.atack1");
 
 function Awake() {
 
@@ -144,6 +144,16 @@ function UpdateSmoothedMovementDirection() {
 	// Target direction relative to the camera
 	var targetDirection = h * right + v * forward;
 	
+	if (currentBaseState.nameHash == locoState)
+	{
+		if(Input.GetButton("Fire1"))
+		{
+			anim.SetBool("Atack", true);
+		}
+	} 
+	
+	
+		
 	// Grounded controls
 	if (grounded)
 	{
