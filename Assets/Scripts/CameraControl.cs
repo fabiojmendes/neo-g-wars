@@ -4,6 +4,7 @@ using System.Collections;
 public class CameraControl : MonoBehaviour {
 	
 	public Transform character;
+	
 	public float damping = 5.0f;
 	
 	private Vector3 diff;
